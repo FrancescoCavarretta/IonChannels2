@@ -55,25 +55,27 @@ INITIAL{
 	h = hInf
 }
 
+FUNCTION efun(z) {
+	 if (fabs(z) < 1e-4) {
+	    efun = 1 - z/2
+	 }else{
+	    efun = z/(exp(z) - 1)
+         }
+}
+
 PROCEDURE rates(){
   LOCAL qt
   qt = 2.3^((celsius-21)/10)
 	
   UNITSOFF
-    if(v == -38){
-    	v = v+0.0001
-    }
-		mAlpha = (0.182 * (v- -38))/(1-(exp(-(v- -38)/6)))
-		mBeta  = (0.124 * (-v -38))/(1-(exp(-(-v -38)/6)))
+		mAlpha = (0.182 * 6)* efun(-(v- -38)/6)
+		mBeta  = (0.124 * 6)* efun(-(-v -38)/6)
 		mTau = (1/(mAlpha + mBeta))/qt
 		mInf = 1/(1+exp(-(v+40.302)/6))
 
-    if(v == -66){
-      v = v + 0.0001
-    }
 
-		hAlpha = (-0.015 * (v- -66))/(1-(exp((v- -66)/6)))
-		hBeta  = (-0.015 * (-v -66))/(1-(exp((-v -66)/6)))
+		hAlpha = (0.015 *6)* efun((v- -66)/6)
+		hBeta  = (0.015 *6)* efun((-v -66)/6)
 		hTau = (1/(hAlpha + hBeta))/qt
 		hInf = 1/(1+exp((v+66)/6))
 	UNITSON
