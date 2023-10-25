@@ -52,7 +52,7 @@ PROCEDURE rates(ca(mM)) {
           if(ca < 1e-300) {
             zInf = 0
           } else {
-            zInf = 1 / (1 + exp(-(log10(ca) + 7.752) / 0.208))
+            zInf = 1 / (1 + exp(-(log(ca) + 7.752) / 0.208))
           }
 }
 
