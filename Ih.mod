@@ -62,6 +62,9 @@ PROCEDURE rates(){
 		mAlpha =  0.001*6.43*11.9* efun((v+154.9)/11.9)
 		mBeta  =  0.001*193*exp(v/33.1)
 		mInf = mAlpha/(mAlpha + mBeta)
+
+        	mAlpha =  0.001*6.43*11.9* efun((v+154.9)/11.9)
+		mBeta  =  0.001*193*exp(v/33.1)
 		mTau = 1/(mAlpha + mBeta)
 	UNITSON
 }
