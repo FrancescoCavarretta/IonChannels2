@@ -48,12 +48,18 @@ INITIAL{
 	m = mInf
 }
 
+FUNCTION efun(z) {
+	 if (fabs(z) < 1e-4) {
+	    efun = 1 - z/2
+	 }else{
+	    efun = z/(exp(z) - 1)
+         }
+}
+
 PROCEDURE rates(){
 	UNITSOFF
-        if(v == -154.9){
-            v = v + 0.0001
-        }
-		mAlpha =  0.001*6.43*(v+154.9)/(exp((v+154.9)/11.9)-1)
+
+		mAlpha =  0.001*6.43*11.9* efun((v+154.9)/11.9)
 		mBeta  =  0.001*193*exp(v/33.1)
 		mInf = mAlpha/(mAlpha + mBeta)
 		mTau = 1/(mAlpha + mBeta)
