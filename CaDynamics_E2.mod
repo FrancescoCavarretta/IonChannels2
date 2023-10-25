@@ -43,5 +43,8 @@ DERIVATIVE states	{
         :
 	:if (drive_channel <= 0.) { drive_channel = 0. }	: cannot pump inward
 	:cai' = drive_channel + (cainf-cai)/taur
-        cai' = -(10000)*(ica*gamma/(2*FARADAY*depth)) - (cai - minCai)/decay
+        
+        drive_channel = - 10000 * ica * gamma / (2 * FARADAY * depth)
+        if (drive_channel < 0) { drive_channel = 0 }
+        cai' = drive_channel - (cai - minCai) / decay
 }
