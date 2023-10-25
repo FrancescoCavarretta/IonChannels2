@@ -96,8 +96,8 @@ PROCEDURE rates(){
 		mInf = mmin + (1-mmin) * 1/(1+exp(-(v+40.302+msh)/(6* (1+mk))))
 
 
-		hAlpha = (0.015 *6)* efun( (v + 66 + htsh)/(6 * (1 + htk1))
-		hBeta  = (0.015 *6)* efun(-(v + 66 + htsh)/(6 * (1 + htk2))
+		hAlpha = (0.015 *6)* efun( (v + 66 + htsh)/(6 * (1 + htk1)))
+		hBeta  = (0.015 *6)* efun(-(v + 66 + htsh)/(6 * (1 + htk2)))
 		hTau = ( htmin + (1 + htmax) * 1 / (hAlpha + hBeta) ) / qt
   
 		hInf = hmin + (1-hmin) * 1/(1+exp((v+66+hsh)/(6* (1+hk))))

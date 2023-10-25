@@ -85,7 +85,7 @@ PROCEDURE rates(){
 		mInf =  mmin + (1-mmin) * (1/(1 + exp(-(v+1+msh)/(12*(1+mk)))))
   
         if (v < (-50-mtsh)) {
-            mTau = ( mtmin + 1.25 + (1+ntmax1)*175.03*exp( (v + mtsh) * 0.026 / (1 + mtk1) ) )/qt
+            mTau = ( mtmin + 1.25 + (1+mtmax1)*175.03*exp( (v + mtsh) * 0.026 / (1 + mtk1) ) )/qt
         } else {
             mTau = ( mtmin + 1.25 + (1+mtmax2)*13    *exp(-(v + mtsh) * 0.026 / (1 + mtk2) ) )/qt
         }
