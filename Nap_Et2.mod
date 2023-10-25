@@ -7,6 +7,7 @@ NEURON	{
 	SUFFIX Nap_Et2
 	USEION na READ ena WRITE ina
 	RANGE gNap_Et2bar, gNap_Et2, ina
+        RANGE msh, mk, mmin, hsh, hk, hmin
 }
 
 UNITS	{
@@ -17,6 +18,12 @@ UNITS	{
 
 PARAMETER	{
 	gNap_Et2bar = 0.00001 (S/cm2)
+        msh = 0
+        mk = 0
+        mmin = 0
+        hsh = 0
+        hk = 0
+        hmin = 0  
 }
 
 ASSIGNED	{
@@ -71,7 +78,7 @@ PROCEDURE rates(){
   qt = 2.3^((celsius-21)/10)
 
 	UNITSOFF
-		mInf = 1.0/(1+exp((v- -52.6)/-4.6))
+		mInf = mmin + (1-mmin) * 1.0/(1+exp((v+52.6+msh)/(-4.6* (1+mk))))
 
 		mAlpha = (0.182 *6) * efun(-(v- -38)/6)
 		mBeta  = (0.124 *6) * efun(-(-v -38)/6)
@@ -79,7 +86,7 @@ PROCEDURE rates(){
 
 
 
-		hInf = 1.0/(1+exp((v- -48.8)/10))
+		hInf = hmin + (1-hmin) * 1.0/(1+exp((v+48.8+hsh)/(10* (1+hk))))
   
     hAlpha = -2.88e-6*4.63 * efun((v + 17)/4.63)
     hBeta = -6.94e-6*2.63 * efun(-(v + 64.4)/2.63)

@@ -8,6 +8,7 @@ NEURON	{
 	SUFFIX K_Pst
 	USEION k READ ek WRITE ik
 	RANGE gK_Pstbar, gK_Pst, ik
+        RANGE msh, mk, mmin, hsh, hk, hmin
 }
 
 UNITS	{
@@ -18,6 +19,12 @@ UNITS	{
 
 PARAMETER	{
 	gK_Pstbar = 0.00001 (S/cm2)
+        msh = 0
+        mk = 0
+        mmin = 0
+        hsh = 0
+        hk = 0
+        hmin = 0          
 }
 
 ASSIGNED	{
@@ -60,13 +67,14 @@ PROCEDURE rates(){
   qt = 2.3^((celsius-21)/10)
 	UNITSOFF
 		v = v + 10
-		mInf =  (1/(1 + exp(-(v+1)/12)))
+		mInf =  mmin + (1-mmin) * (1/(1 + exp(-(v+1+msh)/(12*(1+mk)))))
+  
         if(v<-50){
                    mTau =  (1.25+175.03*exp(-v * -0.026))/qt
         }else{
             mTau = ((1.25+13*exp(-v*0.026)))/qt
         }
-		hInf =  1/(1 + exp(-(v+54)/-11))
+		hInf =  hmin + (1-hmin) * 1/(1 + exp(-(v+54+hsh)/(-11*(1+hk))))
 		hTau =  (360+(1010+24*(v+55))*exp(-((v+75)/48)^2))/qt
 		v = v - 10
 	UNITSON

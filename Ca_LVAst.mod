@@ -7,6 +7,7 @@ NEURON	{
 	SUFFIX Ca_LVAst
 	USEION ca READ eca WRITE ica
 	RANGE gCa_LVAstbar, gCa_LVAst, ica
+        RANGE msh, mk, mmin, hsh, hk, hmin
 }
 
 UNITS	{
@@ -17,6 +18,12 @@ UNITS	{
 
 PARAMETER	{
 	gCa_LVAstbar = 0.00001 (S/cm2)
+        msh = 0
+        mk = 0
+        mmin = 0
+        hsh = 0
+        hk = 0
+        hmin = 0 
 }
 
 ASSIGNED	{
@@ -60,9 +67,9 @@ PROCEDURE rates(){
 
 	UNITSOFF
 		v = v + 10
-		mInf = 1.0000/(1+ exp((v - -30.000)/-6))
+		mInf = mmin + (1-mmin) * 1.0000/(1+ exp((v - -30.000 + msh)/(-6*(1+mk))))
 		mTau = (5.0000 + 20.0000/(1+exp((v - -25.000)/5)))/qt
-		hInf = 1.0000/(1+ exp((v - -80.000)/6.4))
+		hInf = hmin + (1-hmin) * 1.0000/(1+ exp((v - -80.000 + hsh)/(6.4*(1+hk))))
 		hTau = (20.0000 + 50.0000/(1+exp((v - -40.000)/7)))/qt
 		v = v - 10
 	UNITSON

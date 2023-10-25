@@ -5,6 +5,7 @@ NEURON	{
 	SUFFIX Ih
 	NONSPECIFIC_CURRENT ihcn
 	RANGE gIhbar, gIh, ihcn 
+        RANGE msh, mk1, mk2, mmin
 }
 
 UNITS	{
@@ -16,6 +17,10 @@ UNITS	{
 PARAMETER	{
 	gIhbar = 0.00001 (S/cm2) 
 	ehcn =  -45.0 (mV)
+        msh = 0
+        mk1 = 0
+        mk2 = 0
+        mmin = 0
 }
 
 ASSIGNED	{
@@ -59,9 +64,9 @@ FUNCTION efun(z) {
 PROCEDURE rates(){
 	UNITSOFF
 
-		mAlpha =  0.001*6.43*11.9* efun((v+154.9)/11.9)
-		mBeta  =  0.001*193*exp(v/33.1)
-		mInf = mAlpha/(mAlpha + mBeta)
+		mAlpha =  0.001*6.43*11.9* efun((v+154.9+msh)/(11.9* (1+mk1)))
+		mBeta  =  0.001*193*exp((v+msh)/(33.1* (1+mk2)))
+		mInf = mmin + (1-mmin) * mAlpha/(mAlpha + mBeta)
 
         	mAlpha =  0.001*6.43*11.9* efun((v+154.9)/11.9)
 		mBeta  =  0.001*193*exp(v/33.1)

@@ -5,6 +5,7 @@ NEURON	{
 	SUFFIX Ca_HVA
 	USEION ca READ eca WRITE ica
 	RANGE gCa_HVAbar, gCa_HVA, ica 
+        RANGE msh, mk, mmin, hsh, hk, hmin
 }
 
 UNITS	{
@@ -14,7 +15,15 @@ UNITS	{
 }
 
 PARAMETER	{
-	gCa_HVAbar = 0.00001 (S/cm2) 
+	gCa_HVAbar = 0.00001 (S/cm2)
+        msh = 0
+        mk1 = 0
+        mk2 = 0
+        mmin = 0
+        hsh = 0
+        hk1 = 0
+        hk2 = 0
+        hmin = 0         
 }
 
 ASSIGNED	{
@@ -65,14 +74,21 @@ FUNCTION efun(z) {
 
 PROCEDURE rates(){
 	UNITSOFF
-		mAlpha =  (0.055*3.8)*efun((-27-v)/3.8)
+		mAlpha =  (0.055*3.8)*efun(-(27+v+msh)/(3.8*(1+mk1)))
+		mBeta  =  (0.94*exp(-(75+v+msh)/(17*(1+mk2))))
+		mInf = mmin + (1-mmin) * mAlpha/(mAlpha + mBeta)
         
-		mBeta  =  (0.94*exp((-75-v)/17))
-		mInf = mAlpha/(mAlpha + mBeta)
+        	mAlpha =  (0.055*3.8)*efun(-(27+v)/(3.8))
+		mBeta  =  (0.94*exp(-(75+v)/(17)))
 		mTau = 1/(mAlpha + mBeta)
-		hAlpha =  (0.000457*exp((-13-v)/50))
-		hBeta  =  (0.0065/(exp((-v-15)/28)+1))
-		hInf = hAlpha/(hAlpha + hBeta)
-		hTau = 1/(hAlpha + hBeta)
+        
+		hAlpha =  (0.000457*exp(-(13+v+hsh)/(50*(1+hk1))))
+		hBeta  =  (0.0065/(exp(-(v+15+hsh)/(28*(1+hk2)))+1))
+		hInf = hmin + (1-hmin) * hAlpha/(hAlpha + hBeta)
+
+
+		hAlpha =  (0.000457*exp(-(13+v)/(50)))
+		hBeta  =  (0.0065/(exp(-(v+15)/(28))+1))
+                hTau = 1/(hAlpha + hBeta)
 	UNITSON
 }

@@ -4,6 +4,8 @@ NEURON	{
 	SUFFIX NaTa_t
 	USEION na READ ena WRITE ina
 	RANGE gNaTa_tbar, gNaTa_t, ina
+        RANGE msh, mk, mmin, hsh, hk, hmin
+        
 }
 
 UNITS	{
@@ -14,6 +16,12 @@ UNITS	{
 
 PARAMETER	{
 	gNaTa_tbar = 0.00001 (S/cm2)
+        msh = 0
+        mk = 0
+        mmin = 0
+        hsh = 0
+        hk = 0
+        hmin = 0  
 }
 
 ASSIGNED	{
@@ -71,12 +79,12 @@ PROCEDURE rates(){
 		mAlpha = (0.182 * 6)* efun(-(v- -38)/6)
 		mBeta  = (0.124 * 6)* efun(-(-v -38)/6)
 		mTau = (1/(mAlpha + mBeta))/qt
-		mInf = 1/(1+exp(-(v+40.302)/6))
+		mInf = mmin + (1-mmin) * 1/(1+exp(-(v+40.302+msh)/(6* (1+mk))))
 
 
 		hAlpha = (0.015 *6)* efun((v- -66)/6)
 		hBeta  = (0.015 *6)* efun((-v -66)/6)
 		hTau = (1/(hAlpha + hBeta))/qt
-		hInf = 1/(1+exp((v+66)/6))
+		hInf = hmin + (1-hmin) * 1/(1+exp((v+66+hsh)/(6* (1+hk))))
 	UNITSON
 }

@@ -5,6 +5,7 @@ NEURON	{
 	SUFFIX Im
 	USEION k READ ek WRITE ik
 	RANGE gImbar, gIm, ik
+        RANGE msh, mk, mmin
 }
 
 UNITS	{
@@ -14,7 +15,10 @@ UNITS	{
 }
 
 PARAMETER	{
-	gImbar = 0.00001 (S/cm2) 
+	gImbar = 0.00001 (S/cm2)
+        msh = 0
+        mk = 0
+        mmin = 0
 }
 
 ASSIGNED	{
@@ -57,6 +61,6 @@ PROCEDURE rates(){
 		mAlpha = 3.3e-3*exp(2.5*0.04*(v - -35))
 		mBeta = 3.3e-3*exp(-2.5*0.04*(v - -35))
 		mTau = (1/(mAlpha + mBeta))/qt
-		mInf = 1/(1 + exp(-(v+35)/5))
+		mInf = mmin + (1-mmin) * 1/(1 + exp(-(v+35+msh)/ ( 5* (1+mk) ) ))
 	UNITSON
 }

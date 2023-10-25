@@ -6,6 +6,7 @@ NEURON {
        USEION k READ ek WRITE ik
        USEION ca READ cai
        RANGE gSK_E2bar, gSK_E2, ik
+       RANGE msh, mk, mmin
 }
 
 UNITS {
@@ -18,14 +19,18 @@ PARAMETER {
           v            (mV)
           gSK_E2bar = .000001 (mho/cm2)
           zTau = 1              (ms)
-          ek           (mV)
-          cai          (mM)
+
+        msh = 0
+        mk = 0
+        mmin = 0
 }
 
 ASSIGNED {
          zInf
          ik            (mA/cm2)
          gSK_E2	       (mho/cm2)
+         ek           (mV)
+         cai          (mM)
 }
 
 STATE {
@@ -50,9 +55,9 @@ PROCEDURE rates(ca(mM)) {
           :zInf = 1/(1 + (0.00043 (mM)/ ca)^4.8)
 
           if(ca < 1e-300) {
-            zInf = 0
+            zInf = mmin
           } else {
-            zInf = 1 / (1 + exp(-(log(ca) + 7.752) / 0.208))
+            zInf = mmin + (1-mmin) * 1 / (1 + exp(-(log(ca) + 7.752 + msh) / (0.208 * (1+mk))))
           }
 }
 
