@@ -20,7 +20,7 @@ PARAMETER	{
 	gamma = 0.05 : percent of free calcium (not buffered)
 	decay = 80 (ms) : rate of removal of calcium
 	depth = 0.1 (um) : depth of shell
-	minCai = 1e-4 (mM)
+	minCai = 8e-5 (mM)
 }
 
 ASSIGNED	{ica (mA/cm2)}
@@ -30,7 +30,7 @@ STATE	{
 	}
 
 BREAKPOINT	{ SOLVE states METHOD cnexp }
-
+INITIAL { cai=minCai }
 DERIVATIVE states	{
 	cai' = -(10000)*(ica*gamma/(2*FARADAY*depth)) - (cai - minCai)/decay
 }
