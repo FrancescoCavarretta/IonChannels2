@@ -5,7 +5,8 @@ NEURON	{
 	USEION na READ ena WRITE ina
 	RANGE gNaTa_tbar, gNaTa_t, ina
         RANGE msh, mk, mmin, hsh, hk, hmin
-        
+
+        RANGE mtmin, mtmax, mtsh, mtk1, mtk2, htmin, htmax, htsh, htk1, htk2
 }
 
 UNITS	{
@@ -21,7 +22,19 @@ PARAMETER	{
         mmin = 0
         hsh = 0
         hk = 0
-        hmin = 0  
+        hmin = 0
+
+        mtmin = 0
+        mtmax = 0
+        mtsh = 0
+        mtk1 = 0
+        mtk2 = 0
+
+        htmin = 0
+        htmax = 0
+        htsh = 0
+        htk1 = 0
+        htk2 = 0
 }
 
 ASSIGNED	{
@@ -76,15 +89,17 @@ PROCEDURE rates(){
   qt = 2.3^((celsius-21)/10)
 	
   UNITSOFF
-		mAlpha = (0.182 * 6)* efun(-(v- -38)/6)
-		mBeta  = (0.124 * 6)* efun(-(-v -38)/6)
-		mTau = (1/(mAlpha + mBeta))/qt
+		mAlpha = (0.182 * 6)* efun(-(v + 38 + mtsh)/(6 * (1 + mtk1)))
+		mBeta  = (0.124 * 6)* efun( (v + 38 + mtsh)/(6 * (1 + mtk2)))
+		mTau = ( mtmin + (1 + mtmax) * 1 / (mAlpha + mBeta) ) / qt
+  
 		mInf = mmin + (1-mmin) * 1/(1+exp(-(v+40.302+msh)/(6* (1+mk))))
 
 
-		hAlpha = (0.015 *6)* efun((v- -66)/6)
-		hBeta  = (0.015 *6)* efun((-v -66)/6)
-		hTau = (1/(hAlpha + hBeta))/qt
+		hAlpha = (0.015 *6)* efun( (v + 66 + htsh)/(6 * (1 + htk1))
+		hBeta  = (0.015 *6)* efun(-(v + 66 + htsh)/(6 * (1 + htk2))
+		hTau = ( htmin + (1 + htmax) * 1 / (hAlpha + hBeta) ) / qt
+  
 		hInf = hmin + (1-hmin) * 1/(1+exp((v+66+hsh)/(6* (1+hk))))
 	UNITSON
 }

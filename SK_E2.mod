@@ -7,6 +7,7 @@ NEURON {
        USEION ca READ cai
        RANGE gSK_E2bar, gSK_E2, ik
        RANGE msh, mk, mmin
+       RANGE mtmin
 }
 
 UNITS {
@@ -18,7 +19,7 @@ UNITS {
 PARAMETER {
           v            (mV)
           gSK_E2bar = .000001 (mho/cm2)
-          zTau = 1              (ms)
+          mtmin = 1              (ms)
 
         msh = 0
         mk = 0
@@ -45,7 +46,7 @@ BREAKPOINT {
 
 DERIVATIVE states {
         rates(cai)
-        z' = (zInf - z) / zTau
+        z' = (zInf - z) / mtmin
 }
 
 PROCEDURE rates(ca(mM)) {

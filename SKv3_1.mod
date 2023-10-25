@@ -6,6 +6,8 @@ NEURON	{
 	USEION k READ ek WRITE ik
 	RANGE gSKv3_1bar, gSKv3_1, ik
         RANGE msh, mk, mmin
+
+        RANGE mtmin, mtmax, mtsh, mtk
 }
 
 UNITS	{
@@ -19,6 +21,11 @@ PARAMETER	{
         msh = 0
         mk = 0
         mmin = 0
+
+        mtmin = 0
+        mtmax = 0
+        mtsh = 0
+        mtk = 0
 }
 
 ASSIGNED	{
@@ -54,6 +61,6 @@ PROCEDURE rates(){
 	UNITSOFF
 		mInf =  mmin + (1-mmin) * 1/(1+exp(((v - 18.700 + msh)/(-9.700 * (1+mk) ))))
         
-		mTau =  0.2*20.000(ms)/(1+exp(((v + 46.560 )/(-44.140))))
+		mTau =  mtmin + (1 + mtmax) * (0.2*20.000) / (1 + exp(((v + 46.560 + mtsh)/(-44.140 * (1 + mtk)))))
 	UNITSON
 }

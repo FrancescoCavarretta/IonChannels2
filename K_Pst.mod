@@ -9,6 +9,7 @@ NEURON	{
 	USEION k READ ek WRITE ik
 	RANGE gK_Pstbar, gK_Pst, ik
         RANGE msh, mk, mmin, hsh, hk, hmin
+        RANGE mtmin, mtmax1, mtmax2, mtsh, mtk1, mtk2, htmin, htmax1, htmax2, htsh, htk1, htk2 
 }
 
 UNITS	{
@@ -24,7 +25,21 @@ PARAMETER	{
         mmin = 0
         hsh = 0
         hk = 0
-        hmin = 0          
+        hmin = 0
+        
+        mtmin = 0
+        mtmax1 = 0
+        mtmax2 = 0
+        mtsh = 0
+        mtk1 = 0
+        mtk2 = 0
+
+        htmin = 0
+        htmax1 = 0
+        htmax2 = 0
+        htsh = 0
+        htk1 = 0     
+        htk2 = 0         
 }
 
 ASSIGNED	{
@@ -69,13 +84,15 @@ PROCEDURE rates(){
 		v = v + 10
 		mInf =  mmin + (1-mmin) * (1/(1 + exp(-(v+1+msh)/(12*(1+mk)))))
   
-        if(v<-50){
-                   mTau =  (1.25+175.03*exp(-v * -0.026))/qt
-        }else{
-            mTau = ((1.25+13*exp(-v*0.026)))/qt
+        if (v < (-50-mtsh)) {
+            mTau = ( mtmin + 1.25 + (1+ntmax1)*175.03*exp( (v + mtsh) * 0.026 / (1 + mtk1) ) )/qt
+        } else {
+            mTau = ( mtmin + 1.25 + (1+mtmax2)*13    *exp(-(v + mtsh) * 0.026 / (1 + mtk2) ) )/qt
         }
 		hInf =  hmin + (1-hmin) * 1/(1 + exp(-(v+54+hsh)/(-11*(1+hk))))
-		hTau =  (360+(1010+24*(v+55))*exp(-((v+75)/48)^2))/qt
+
+		hTau =  ( htmin + 360 + htmax1 * 1010  * exp(-((v+75+htsh)/(48 * (1 + htk1)))^2) + htmax2 * 24 * (v + 55 + htsh)  * exp(-((v+75+htsh)/(48 * (1 + htk2)))^2))/qt
+  
 		v = v - 10
 	UNITSON
 }

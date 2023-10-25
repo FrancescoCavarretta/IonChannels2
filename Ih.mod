@@ -6,6 +6,7 @@ NEURON	{
 	NONSPECIFIC_CURRENT ihcn
 	RANGE gIhbar, gIh, ihcn 
         RANGE msh, mk1, mk2, mmin
+        RANGE mtmin, mtmax, mtsh, mtk1, mtk2
 }
 
 UNITS	{
@@ -21,6 +22,12 @@ PARAMETER	{
         mk1 = 0
         mk2 = 0
         mmin = 0
+
+        mtmin = 0
+        mtmax = 0
+        mtsh = 0
+        mtk1 = 0
+        mtk2 = 0
 }
 
 ASSIGNED	{
@@ -68,8 +75,8 @@ PROCEDURE rates(){
 		mBeta  =  0.001*193*exp((v+msh)/(33.1* (1+mk2)))
 		mInf = mmin + (1-mmin) * mAlpha/(mAlpha + mBeta)
 
-        	mAlpha =  0.001*6.43*11.9* efun((v+154.9)/11.9)
-		mBeta  =  0.001*193*exp(v/33.1)
-		mTau = 1/(mAlpha + mBeta)
+        	mAlpha =  0.001*6.43*11.9* efun((v + 154.9 + mtsh)/(11.9 * (1 + mtk1)))
+		mBeta  =  0.001*193*exp((v + mtsh)/(33.1 * (1 + mtk2)))
+		mTau = mtmin + (1 + mtmax) * 1 / (mAlpha + mBeta)
 	UNITSON
 }

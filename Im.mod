@@ -6,6 +6,7 @@ NEURON	{
 	USEION k READ ek WRITE ik
 	RANGE gImbar, gIm, ik
         RANGE msh, mk, mmin
+        RANGE mtmin, mtmax, mtsh, mtk
 }
 
 UNITS	{
@@ -19,6 +20,11 @@ PARAMETER	{
         msh = 0
         mk = 0
         mmin = 0
+
+        mtmin = 0
+        mtmax = 0
+        mtsh = 0
+        mtk = 0
 }
 
 ASSIGNED	{
@@ -58,9 +64,9 @@ PROCEDURE rates(){
   qt = 2.3^((celsius-21)/10)
 
 	UNITSOFF
-		mAlpha = 3.3e-3*exp(2.5*0.04*(v - -35))
-		mBeta = 3.3e-3*exp(-2.5*0.04*(v - -35))
-		mTau = (1/(mAlpha + mBeta))/qt
-		mInf = mmin + (1-mmin) * 1/(1 + exp(-(v+35+msh)/ ( 5* (1+mk) ) ))
+		mAlpha = 3.3e-3*exp(2.5*0.04*(v + 35 + mtsh) / (1 + mtk))
+		mBeta = 3.3e-3*exp(-2.5*0.04*(v + 35 + mtsh) / (1 + mtk))
+		mTau = mtmin + (1 + mtmax) * (1/(mAlpha + mBeta))/qt
+		mInf = mmin + (1-mmin) * 1/(1 + exp(-(v+35+msh)/ ( 5 * (1+mk) ) ))
 	UNITSON
 }
