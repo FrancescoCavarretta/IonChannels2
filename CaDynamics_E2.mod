@@ -23,7 +23,10 @@ PARAMETER	{
 	minCai = 8e-5 (mM)
 }
 
-ASSIGNED	{ica (mA/cm2)}
+ASSIGNED	{
+  ica (mA/cm2)
+  drive_channel	(mM/ms)
+}
 
 STATE	{
 	cai (mM)
@@ -32,5 +35,13 @@ STATE	{
 BREAKPOINT	{ SOLVE states METHOD cnexp }
 INITIAL { cai=minCai }
 DERIVATIVE states	{
-	cai' = -(10000)*(ica*gamma/(2*FARADAY*depth)) - (cai - minCai)/decay
+        :original code line
+	:cai' = -(10000)*(ica*gamma/(2*FARADAY*depth)) - (cai - minCai)/decay
+        :
+        :copied from mod files written by Alan Destexhe, 1995
+        :drive_channel =  - (10000) * ica / (2 * FARADAY * depth)
+        :
+	:if (drive_channel <= 0.) { drive_channel = 0. }	: cannot pump inward
+	:cai' = drive_channel + (cainf-cai)/taur
+        cai' = -(10000)*(ica*gamma/(2*FARADAY*depth)) - (cai - minCai)/decay
 }
