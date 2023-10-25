@@ -44,10 +44,16 @@ DERIVATIVE states {
 }
 
 PROCEDURE rates(ca(mM)) {
-          if(ca < 1e-7 (mM)){
-	              ca = ca + 1e-07 (mM)
+          :if(ca < 1e-7 (mM)){
+	  :            ca = ca + 1e-07 (mM)
+          :}
+          :zInf = 1/(1 + (0.00043 (mM)/ ca)^4.8)
+
+          if(ca < 1e-300) {
+            zInf = 0
+          } else {
+            zInf = 1 / (1 + exp(-(log10(ca) + 7.752) / 0.208))
           }
-          zInf = 1/(1 + (0.00043 (mM)/ ca)^4.8)
 }
 
 INITIAL {
